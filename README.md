@@ -34,7 +34,7 @@ brew install ffmpeg
 # Linux
 sudo apt install ffmpeg
 
-git clone https://github.com/<you>/montage-ai.git
+git clone https://github.com/Mostafa7076/montage-ai.git
 cd montage-ai
 ```
 
