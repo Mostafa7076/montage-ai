@@ -10,3 +10,10 @@ dist/
 plan.json
 *_capcut/
 .env
+# your own footage, demo media and reference images pulled from Pinterest
+raw/
+demo/
+output/
+montage_ai/templates/*.jpg
+montage_ai/templates/*.png
+montage_ai/templates/*.webp

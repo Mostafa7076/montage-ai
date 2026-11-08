@@ -1,0 +1,24 @@
+{
+  "name": "Tokyo Blue Hour",
+  "description": "ساعة الغروب الزرقاء: ظلال زرقاء باردة وأضواء شوارع برتقالية دافئة، مأخوذ من Pin على Pinterest",
+  "mood": "calm, cinematic city at blue hour",
+  "source": "https://www.pinterest.com/pin/the-neon-light-of-tokyo-at-night-tokyo-commercial-district-at-night-taken-fro-sponsored-tokyo-light-neon-night--587508713874803638/",
+  "analyzed_by": "claude (manual review of the measured look)",
+  "settings": {"width": 1080, "height": 1920, "fit": "cover"},
+  "color": {
+    "brightness": -0.01,
+    "contrast": 1.1,
+    "saturation": 1.15,
+    "gamma": 0.96,
+    "temperature": 7200,
+    "balance": {"shadows": [-0.05, 0.0, 0.10], "highlights": [0.10, 0.03, -0.05]},
+    "vignette": true,
+    "sharpen": 0.5
+  },
+  "transition": {"type": "dissolve", "duration": 0.4},
+  "pacing": {"clip_length": 2.5},
+  "text_style": {"color": "#FFFFFF", "position": "center", "size_ratio": 0.045, "bold": true},
+  "fade_in": 0.6,
+  "fade_out": 1.0,
+  "stats": {"brightness": 0.5, "contrast": 0.13, "saturation": 0.48, "warmth": -0.16}
+}
