@@ -18,7 +18,23 @@ from .templates import TEMPLATE_DIR, list_templates, load_template
 
 STATIC = Path(__file__).parent / "static"
 JOBS: dict = {}
-DEFAULT_OUT = Path.home() / "Videos" / "MontageAI"
+def _writable_dir() -> Path:
+    """First output folder we can really write to. Windows 'Controlled folder access'
+    often blocks Videos/Documents for Python, so fall back to unprotected places."""
+    for d in (Path.home() / "Videos" / "MontageAI", Path.home() / "MontageAI",
+              Path.cwd() / "output"):
+        try:
+            d.mkdir(parents=True, exist_ok=True)
+            probe = d / ".write_test"
+            probe.write_bytes(b"ok")
+            probe.unlink()
+            return d
+        except OSError:
+            continue
+    raise OSError("No writable output folder found")
+
+
+DEFAULT_OUT = _writable_dir()
 
 
 def _run_job(kind: str, fn, *args) -> str:
@@ -43,8 +59,7 @@ def _run_job(kind: str, fn, *args) -> str:
 
 def _out_path(name: str | None, ext: str) -> str:
     if name and os.path.isabs(name):
-        return name
-    DEFAULT_OUT.mkdir(parents=True, exist_ok=True)
+        return name if not ext or name.lower().endswith(ext) else name + ext
     stem = re.sub(r"[^\w\-]+", "_", name or "montage", flags=re.UNICODE) or "montage"
     return str(DEFAULT_OUT / (stem if stem.endswith(ext) or not ext else stem + ext))
 
