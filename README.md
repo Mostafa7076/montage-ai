@@ -55,7 +55,7 @@ python -m montage_ai serve
 python -m montage_ai make clip1.mp4 clip2.mp4 -t cinematic --resolution 4k --title "My Trip" --music song.mp3 -o final.mp4
 ```
 
-**Claude (أو Gemini أو Grok) يقوم بالمونتاج:**
+**الذكاء الاصطناعي يقوم بالمونتاج (Claude أو Gemini أو Grok):**
 
 ```bash
 python -m montage_ai make *.mp4 --ai claude -p "30s energetic travel reel, warm colors" -t vibrant_reels -o reel.mp4
