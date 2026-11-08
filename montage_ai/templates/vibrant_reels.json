@@ -1,0 +1,11 @@
+{
+  "name": "Vibrant Reels",
+  "description": "ريلز سريع: ألوان مشبعة، قص سريع، عمودي 9:16",
+  "settings": {"width": 1080, "height": 1920, "fit": "blur"},
+  "color": {"contrast": 1.08, "saturation": 1.25, "vibrance": 0.3, "sharpen": 0.8},
+  "transition": {"type": "slideleft", "duration": 0.25},
+  "pacing": {"clip_length": 1.6},
+  "text_style": {"color": "white", "position": "lower_third", "size_ratio": 0.045, "bold": true, "box": true, "box_color": "black@0.45"},
+  "music_volume": 0.5,
+  "fade_in": 0.2, "fade_out": 0.5
+}

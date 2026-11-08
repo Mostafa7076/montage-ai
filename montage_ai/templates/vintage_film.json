@@ -1,0 +1,13 @@
+{
+  "name": "Vintage Film",
+  "description": "فيلم قديم: ألوان دافئة باهتة، حبيبات فيلم، إطار داكن",
+  "color": {
+    "contrast": 0.95, "saturation": 0.8, "temperature": 5200,
+    "curves": "vintage", "grain": 12, "vignette": true
+  },
+  "transition": {"type": "fadeblack", "duration": 0.5},
+  "pacing": {"clip_length": 4.0},
+  "text_style": {"color": "#F3E6C8", "position": "bottom", "size_ratio": 0.055, "bold": false},
+  "music_volume": 0.4,
+  "fade_in": 1.0, "fade_out": 1.5
+}

@@ -1,0 +1,13 @@
+{
+  "name": "Moody Dark",
+  "description": "داكن ودرامي: ألوان باردة منخفضة التشبع، ظلال عميقة",
+  "color": {
+    "brightness": -0.03, "contrast": 1.18, "saturation": 0.75, "gamma": 0.92,
+    "temperature": 7600, "vignette": true, "grain": 5
+  },
+  "transition": {"type": "dissolve", "duration": 0.8},
+  "pacing": {"clip_length": 4.5},
+  "text_style": {"color": "#DDE6F0", "position": "center", "size_ratio": 0.06, "bold": false},
+  "music_volume": 0.4,
+  "fade_in": 1.2, "fade_out": 1.5
+}

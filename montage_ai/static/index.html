@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Montage AI</title>
+<style>
+  :root {
+    --bg: #0f1115; --panel: #171a21; --panel2: #1e222b; --line: #2a2f3a;
+    --text: #e8eaef; --muted: #9aa3b2; --accent: #6c8cff; --accent2: #4ad6a4; --bad: #ff6b6b;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 15px/1.6 "Segoe UI", Tahoma, Arial, sans-serif; }
+  header { padding: 18px 24px; border-bottom: 1px solid var(--line); display: flex;
+           align-items: center; gap: 12px; flex-wrap: wrap; }
+  header h1 { margin: 0; font-size: 20px; }
+  header .tag { color: var(--muted); font-size: 13px; }
+  main { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px;
+         padding: 16px; max-width: 1400px; margin: 0 auto; }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+  section { background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+            padding: 16px; }
+  section h2 { margin: 0 0 12px; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+  .step { background: var(--accent); color: #fff; border-radius: 50%; width: 24px; height: 24px;
+          display: inline-grid; place-items: center; font-size: 13px; }
+  label { display: block; color: var(--muted); font-size: 13px; margin: 10px 0 4px; }
+  input, select, textarea { width: 100%; background: var(--panel2); color: var(--text);
+          border: 1px solid var(--line); border-radius: 8px; padding: 9px 10px; font: inherit; }
+  textarea { resize: vertical; }
+  textarea.code { font: 12px/1.5 Consolas, monospace; direction: ltr; text-align: left; min-height: 260px; }
+  .ltr { direction: ltr; text-align: left; }
+  .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+  button { background: var(--accent); color: #fff; border: 0; border-radius: 8px; padding: 10px 16px;
+           font: inherit; font-weight: 600; cursor: pointer; margin-top: 12px; }
+  button.alt { background: var(--panel2); border: 1px solid var(--line); color: var(--text); }
+  button:disabled { opacity: .5; cursor: wait; }
+  .msg { margin-top: 10px; font-size: 13px; color: var(--muted); white-space: pre-wrap; }
+  .msg.err { color: var(--bad); }
+  .msg.ok { color: var(--accent2); }
+  .tpls { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin-top: 8px; }
+  .tpl { background: var(--panel2); border: 2px solid transparent; border-radius: 10px; padding: 8px;
+         cursor: pointer; font-size: 12px; }
+  .tpl.sel { border-color: var(--accent); }
+  .tpl b { display: block; font-size: 13px; }
+  .tpl img { width: 100%; height: 70px; object-fit: cover; border-radius: 6px; margin-bottom: 4px; }
+  .tpl .sw { height: 10px; border-radius: 4px; margin-bottom: 6px; }
+  .clips { display: flex; gap: 4px; overflow-x: auto; padding: 6px 0; direction: ltr; }
+  .clip { background: var(--panel2); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px;
+          font-size: 11px; white-space: nowrap; min-width: 60px; }
+  .bar { height: 8px; background: var(--panel2); border-radius: 6px; overflow: hidden; margin-top: 10px; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--accent2); transition: width .3s; }
+  video { width: 100%; border-radius: 10px; margin-top: 12px; background: #000; }
+  details summary { cursor: pointer; color: var(--muted); }
+  .pill { font-size: 12px; padding: 2px 8px; border-radius: 99px; background: var(--panel2); border: 1px solid var(--line); }
+  .pill.on { color: var(--accent2); border-color: var(--accent2); }
+  .full { grid-column: 1 / -1; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🎬 Montage AI</h1>
+  <span class="tag">مونتاج احترافي بالذكاء الاصطناعي: قص، ألوان، انتقالات، تصدير حتى 8K</span>
+  <span id="provs" style="margin-inline-start:auto; display:flex; gap:6px"></span>
+</header>
+
+<main>
+  <section>
+    <h2><span class="step">1</span> الفيديوهات والطلب</h2>
+    <label>مسارات الفيديو (سطر لكل ملف)</label>
+    <textarea id="videos" rows="4" class="ltr" placeholder="C:\Videos\clip1.mp4"></textarea>
+    <label>ماذا تريد؟ (اكتب بأي لغة)</label>
+    <textarea id="prompt" rows="3" placeholder="مثال: فيديو سفر حماسي مدته 30 ثانية، ألوان دافئة، عنوان في البداية: رحلتي إلى إسطنبول"></textarea>
+    <div class="row">
+      <div><label>المحرّر</label>
+        <select id="ai"><option value="">تلقائي (بدون ذكاء اصطناعي)</option>
+          <option value="claude">Claude</option><option value="gemini">Gemini</option><option value="grok">Grok</option></select></div>
+      <div><label>الدقة</label><select id="resolution"></select></div>
+      <div><label>ملاءمة الصورة</label>
+        <select id="fit"><option value="">حسب القالب</option><option value="cover">ملء الإطار</option>
+          <option value="blur">خلفية مموهة</option><option value="contain">إطار أسود</option></select></div>
+    </div>
+    <div class="row">
+      <div><label>المدة بالثواني (الوضع التلقائي)</label><input id="duration" type="number" min="1" placeholder="كامل"></div>
+      <div><label>عنوان على الافتتاحية (الوضع التلقائي)</label><input id="title"></div>
+    </div>
+    <label>موسيقى (اختياري)</label>
+    <input id="music" class="ltr" placeholder="C:\Music\song.mp3">
+    <button id="planBtn">✨ أنشئ المونتاج</button>
+    <div id="planMsg" class="msg"></div>
+  </section>
+
+  <section>
+    <h2><span class="step">2</span> القالب (الستايل)</h2>
+    <div id="tpls" class="tpls"></div>
+    <details style="margin-top:14px" open>
+      <summary>📌 قالب جديد من Pinterest أو صورة</summary>
+      <label>رابط Pin من Pinterest أو رابط صورة أو مسار صورة</label>
+      <input id="pinUrl" class="ltr" placeholder="https://www.pinterest.com/pin/...">
+      <div class="row">
+        <div><label>اسم القالب</label><input id="pinName" placeholder="مثال: صيف دافئ"></div>
+        <div><label>حلّل بواسطة</label>
+          <select id="pinAi"><option value="">قياس الألوان فقط</option>
+            <option value="claude">Claude</option><option value="gemini">Gemini</option><option value="grok">Grok</option></select></div>
+      </div>
+      <label>ملاحظات إضافية (اختياري)</label>
+      <input id="pinHint" placeholder="مثال: قص سريع لريلز سفر">
+      <button id="pinBtn" class="alt">📥 استخرج القالب</button>
+      <div id="pinMsg" class="msg"></div>
+    </details>
+    <details style="margin-top:14px">
+      <summary>🔑 مفاتيح الذكاء الاصطناعي</summary>
+      <p class="msg">تُحفظ في الذاكرة فقط حتى إغلاق الأداة. يمكنك بدلاً من ذلك ضبط ANTHROPIC_API_KEY و GEMINI_API_KEY و XAI_API_KEY.</p>
+      <label>Claude (Anthropic)</label><input id="k_claude" type="password" class="ltr">
+      <label>Gemini (Google)</label><input id="k_gemini" type="password" class="ltr">
+      <label>Grok (xAI)</label><input id="k_grok" type="password" class="ltr">
+      <button id="keysBtn" class="alt">حفظ</button>
+    </details>
+  </section>
+
+  <section class="full">
+    <h2><span class="step">3</span> الخط الزمني والتعديل</h2>
+    <div id="clips" class="clips"></div>
+    <div id="planNotes" class="msg"></div>
+    <details>
+      <summary>تعديل متقدم (JSON): الأوقات والألوان والنصوص والانتقالات</summary>
+      <textarea id="plan" class="code" spellcheck="false"></textarea>
+    </details>
+  </section>
+
+  <section class="full">
+    <h2><span class="step">4</span> التصدير</h2>
+    <div class="row">
+      <div><label>الجودة</label>
+        <select id="preset">
+          <option value="h264_high">MP4 H.264 بجودة عالية جداً</option>
+          <option value="gpu">MP4 بكرت الشاشة (أسرع بكثير: NVIDIA/Intel/AMD)</option>
+          <option value="h265_10bit">MP4 H.265 بعمق 10-bit (أصغر حجماً)</option>
+          <option value="prores_hq">ProRes 422 HQ (للمحترفين)</option>
+          <option value="draft">معاينة سريعة</option>
+        </select></div>
+      <div><label>اسم الملف</label><input id="outName" value="montage" class="ltr"></div>
+    </div>
+    <button id="renderBtn">🎞️ صدّر الفيديو</button>
+    <button id="capcutBtn" class="alt">CapCut</button>
+    <button id="xmlBtn" class="alt">Premiere / DaVinci XML</button>
+    <button id="lutBtn" class="alt">LUT (.cube)</button>
+    <div class="bar"><i id="bar"></i></div>
+    <div id="exMsg" class="msg"></div>
+    <video id="player" controls hidden></video>
+  </section>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+let selectedTpl = "";
+
+async function api(path, body) {
+  const r = await fetch(path, body === undefined ? {} : {
+    method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)});
+  const j = await r.json();
+  if (!r.ok || j.error) throw new Error(j.error || r.statusText);
+  return j;
+}
+function msg(el, text, cls = "") { $(el).textContent = text; $(el).className = "msg " + cls; }
+
+async function loadStatus() {
+  const s = await api("/api/status");
+  $("provs").innerHTML = s.providers.map(p =>
+    `<span class="pill ${s.available.includes(p) ? "on" : ""}">${p}</span>`).join("");
+  $("resolution").innerHTML = `<option value="">حسب القالب (1080p)</option>` +
+    s.resolutions.map(r => `<option value="${r}">${r}</option>`).join("");
+  $("tpls").innerHTML = `<div class="tpl ${selectedTpl === "" ? "sel" : ""}" data-id=""><b>بدون قالب</b>ألوان الفيديو الأصلية</div>` +
+    s.templates.map(t => `<div class="tpl ${selectedTpl === t.id ? "sel" : ""}" data-id="${t.id}">
+      ${t.source ? `<img src="/api/templates/${t.id}/image" onerror="this.remove()">` : ""}
+      <b></b><span></span></div>`).join("");
+  s.templates.forEach((t, i) => {
+    const el = $("tpls").children[i + 1];
+    el.querySelector("b").textContent = t.name;
+    el.querySelector("span").textContent = t.description;
+  });
+  $("tpls").querySelectorAll(".tpl").forEach(el => el.onclick = () => {
+    selectedTpl = el.dataset.id;
+    $("tpls").querySelectorAll(".tpl").forEach(x => x.classList.toggle("sel", x === el));
+  });
+  $("exMsg").dataset.out = s.output_dir;
+}
+
+function showPlan(plan) {
+  $("plan").value = JSON.stringify(plan, null, 2);
+  const name = p => p.split(/[\\/]/).pop();
+  $("clips").innerHTML = plan.clips.map((c, i) =>
+    `<div class="clip" style="flex:${(c.end - c.start) / (c.speed || 1)}">
+      #${i + 1} ${c.transition ? "⟿ " + c.transition.type : "✂"}<br>${name(c.source)}<br>${c.start}s → ${c.end}s${c.speed != 1 ? " ×" + c.speed : ""}</div>`).join("");
+  const total = plan.clips.reduce((a, c) => a + (c.end - c.start) / (c.speed || 1), 0);
+  msg("planNotes", `${plan.clips.length} لقطة • ${plan.settings.width}×${plan.settings.height} @ ${plan.settings.fps}fps • تقريباً ${total.toFixed(1)} ثانية قبل الانتقالات` +
+    (plan.notes ? "\n🤖 " + plan.notes : ""));
+}
+function currentPlan() {
+  try { return JSON.parse($("plan").value); }
+  catch (e) { throw new Error("صيغة JSON في الخطة غير صحيحة: " + e.message); }
+}
+
+$("planBtn").onclick = async () => {
+  const b = $("planBtn"); b.disabled = true;
+  msg("planMsg", $("ai").value ? `جارٍ إرسال الطلب إلى ${$("ai").value}...` : "جارٍ تحليل المشاهد والقص...");
+  try {
+    const plan = await api("/api/plan", {
+      videos: $("videos").value.split("\n"), prompt: $("prompt").value, ai: $("ai").value,
+      template: selectedTpl, resolution: $("resolution").value, fit: $("fit").value,
+      duration: $("duration").value, title: $("title").value, music: $("music").value});
+    showPlan(plan); msg("planMsg", "✅ الخطة جاهزة. راجعها في الخطوة 3 ثم صدّر الفيديو.", "ok");
+  } catch (e) { msg("planMsg", e.message, "err"); }
+  b.disabled = false;
+};
+
+$("pinBtn").onclick = async () => {
+  const b = $("pinBtn"); b.disabled = true; msg("pinMsg", "جارٍ جلب الصورة وتحليلها...");
+  try {
+    const t = await api("/api/template", {source: $("pinUrl").value.trim(), name: $("pinName").value,
+      ai: $("pinAi").value, hint: $("pinHint").value});
+    selectedTpl = t.id; await loadStatus();
+    msg("pinMsg", `✅ حُفظ القالب "${t.name}" واختير.` + (t.ai_error ? "\n⚠️ فشل تحليل الذكاء الاصطناعي، واستُخدم قياس الألوان: " + t.ai_error : ""), t.ai_error ? "" : "ok");
+  } catch (e) { msg("pinMsg", e.message, "err"); }
+  b.disabled = false;
+};
+
+$("keysBtn").onclick = async () => {
+  const keys = {};
+  ["claude", "gemini", "grok"].forEach(p => { const v = $("k_" + p).value.trim(); if (v) keys[p] = v; });
+  await api("/api/keys", keys); ["claude", "gemini", "grok"].forEach(p => $("k_" + p).value = "");
+  loadStatus();
+};
+
+async function poll(job, label, onDone) {
+  for (;;) {
+    const j = await api("/api/jobs/" + job);
+    $("bar").style.width = (j.progress * 100).toFixed(1) + "%";
+    msg("exMsg", `${label}... ${(j.progress * 100).toFixed(0)}%`);
+    if (j.status === "done") { onDone(j); return; }
+    if (j.status === "error") { msg("exMsg", j.error, "err"); return; }
+    await new Promise(r => setTimeout(r, 700));
+  }
+}
+function busy(on) { ["renderBtn", "capcutBtn", "xmlBtn", "lutBtn"].forEach(id => $(id).disabled = on); }
+
+$("renderBtn").onclick = async () => {
+  busy(true); $("player").hidden = true;
+  try {
+    const {job} = await api("/api/render", {plan: currentPlan(), preset: $("preset").value, output: $("outName").value});
+    await poll(job, "جارٍ التصدير", j => {
+      msg("exMsg", "✅ تم الحفظ في: " + j.result, "ok");
+      if (!j.result.endsWith(".mov")) { $("player").src = `/api/jobs/${job}/video`; $("player").hidden = false; }
+    });
+  } catch (e) { msg("exMsg", e.message, "err"); }
+  busy(false);
+};
+$("capcutBtn").onclick = async () => {
+  busy(true);
+  try {
+    const {job} = await api("/api/export", {kind: "capcut", plan: currentPlan(), output: $("outName").value});
+    await poll(job, "جارٍ تجهيز ملفات CapCut", j => msg("exMsg", "✅ مجلد CapCut جاهز (اقرأ ملف README_CapCut.txt داخله):\n" + j.result, "ok"));
+  } catch (e) { msg("exMsg", e.message, "err"); }
+  busy(false);
+};
+for (const [id, kind, txt] of [["xmlBtn", "xml", "ملف XML (استورده عبر File > Import في Premiere أو DaVinci)"], ["lutBtn", "lut", "ملف LUT"]]) {
+  $(id).onclick = async () => {
+    busy(true);
+    try { const r = await api("/api/export", {kind, plan: currentPlan(), output: $("outName").value});
+          msg("exMsg", `✅ ${txt}:\n${r.result}`, "ok"); }
+    catch (e) { msg("exMsg", e.message, "err"); }
+    busy(false);
+  };
+}
+loadStatus().catch(e => msg("planMsg", e.message, "err"));
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+*.mp4
+*.mov
+*.mp3
+*.wav
+plan.json
+*_capcut/
+.env

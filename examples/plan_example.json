@@ -1,0 +1,23 @@
+{
+  "settings": {"width": 3840, "height": 2160, "fps": 30, "fit": "cover"},
+  "clips": [
+    {"source": "clips/intro.mp4", "start": 2.0, "end": 6.5},
+    {"source": "clips/city.mp4", "start": 10.0, "end": 14.0, "speed": 1.5,
+     "transition": {"type": "dissolve", "duration": 0.6}},
+    {"source": "clips/sunset.mp4", "start": 0.0, "end": 5.0,
+     "transition": {"type": "fadeblack", "duration": 0.8},
+     "color": {"temperature": 5000, "saturation": 1.2}}
+  ],
+  "color": {
+    "contrast": 1.12, "saturation": 1.08,
+    "balance": {"shadows": [-0.08, 0.0, 0.10], "highlights": [0.08, 0.02, -0.08]},
+    "vignette": true, "sharpen": 0.6
+  },
+  "texts": [
+    {"text": "رحلتي إلى إسطنبول", "start": 0.3, "end": 3.5, "position": "center", "color": "#FFFFFF"},
+    {"text": "2026", "start": 9.0, "end": 12.0, "position": "bottom", "box": true}
+  ],
+  "music": {"path": "music/track.mp3", "volume": 0.3, "fade_out": 2},
+  "fade_in": 0.6,
+  "fade_out": 1.2
+}

@@ -1,0 +1,10 @@
+{
+  "name": "Classic Black & White",
+  "description": "أبيض وأسود كلاسيكي بتباين عالٍ",
+  "color": {"saturation": 0.0, "contrast": 1.25, "curves": "medium_contrast", "grain": 8, "vignette": true},
+  "transition": {"type": "fadeblack", "duration": 0.6},
+  "pacing": {"clip_length": 3.5},
+  "text_style": {"color": "white", "position": "center", "size_ratio": 0.065, "bold": true},
+  "music_volume": 0.35,
+  "fade_in": 1.0, "fade_out": 1.2
+}
