@@ -27,13 +27,12 @@
 المتطلبات: **Python 3.10+** و**ffmpeg** (الإصدار 7 أو أحدث). لا تحتاج أي مكتبات إضافية.
 
 ```bash
-# Windows
-winget install Gyan.FFmpeg
-# macOS
-brew install ffmpeg
-# Linux
-sudo apt install ffmpeg
+winget install Gyan.FFmpeg      # Windows
+brew install ffmpeg             # macOS
+sudo apt install ffmpeg         # Linux
+```
 
+```bash
 git clone https://github.com/Mostafa7076/montage-ai.git
 cd montage-ai
 ```
@@ -50,26 +49,41 @@ python -m montage_ai serve
 
 ### سطر الأوامر
 
+**مونتاج تلقائي بقالب سينمائي وتصدير 4K:**
+
 ```bash
-# مونتاج تلقائي بقالب سينمائي وتصدير 4K
-python -m montage_ai make clip1.mp4 clip2.mp4 -t cinematic --resolution 4k --title "رحلتي" --music song.mp3 -o final.mp4
+python -m montage_ai make clip1.mp4 clip2.mp4 -t cinematic --resolution 4k --title "My Trip" --music song.mp3 -o final.mp4
+```
 
-# Claude (أو Gemini أو Grok) يقوم بالمونتاج
-python -m montage_ai make *.mp4 --ai claude -p "ريلز سفر حماسي 30 ثانية بألوان دافئة" -t vibrant_reels -o reel.mp4
+**Claude (أو Gemini أو Grok) يقوم بالمونتاج:**
 
-# قالب جديد من Pinterest
+```bash
+python -m montage_ai make *.mp4 --ai claude -p "30s energetic travel reel, warm colors" -t vibrant_reels -o reel.mp4
+```
+
+**قالب جديد من Pinterest:**
+
+```bash
 python -m montage_ai template from "https://www.pinterest.com/pin/123456/" -n "summer_warm" --ai gemini
 python -m montage_ai template list
+```
 
-# خطة قابلة للتعديل، ثم تصدير
+**خطة قابلة للتعديل، ثم تصدير:**
+
+```bash
 python -m montage_ai plan a.mp4 b.mp4 -t moody_dark -o plan.json
 python -m montage_ai render plan.json -o final.mov --preset prores_hq
+```
 
-# تسليم العمل لبرامج أخرى
+**تسليم العمل لبرامج أخرى (CapCut، Premiere / DaVinci، LUT):**
+
+```bash
 python -m montage_ai export capcut plan.json -o my_capcut_pack
-python -m montage_ai export xml plan.json -o sequence.xml      # Premiere / DaVinci
+python -m montage_ai export xml plan.json -o sequence.xml
 python -m montage_ai export lut plan.json -o look.cube
 ```
+
+> يمكن كتابة العنوان والطلب (`--title` و `-p`) بالعربية، وستظهر النصوص بالعربية في الفيديو.
 
 أضف `--draft` لمعاينة سريعة قبل التصدير النهائي، و`--preset gpu` لتصدير أسرع بكرت الشاشة.
 
